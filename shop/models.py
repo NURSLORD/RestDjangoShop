@@ -1,21 +1,7 @@
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 
-
-class Customer(models.Model):
-    name = models.CharField(max_length=80, verbose_name='Имя')
-    surname = models.CharField(max_length=80, verbose_name='Фамилия')
-    age = models.PositiveIntegerField(verbose_name='Возраст', default=0, blank=True, null=True)
-    image = models.ImageField(verbose_name='Фото', upload_to='Customers/%Y/%m/%d', blank=True, null=True)
-    address = models.CharField(verbose_name='Адрес', max_length=80)
-
-    def __str__(self):
-        return f'{self.surname} {self.name}'
-
-    class Meta:
-        verbose_name = 'Клиент'
-        verbose_name_plural = 'Клиенты'
-        unique_together = ['name', 'surname']
+from account.models import User
 
 
 class Category(models.Model):
@@ -87,7 +73,7 @@ class Order(models.Model):
         ('CASH', 'Наличка'),
         ('CARD', 'Карта'),
     ]
-    customer = models.ForeignKey(to=Customer, on_delete=models.CASCADE, verbose_name='Клиент')
+    customer = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name='Клиент')
     fee = models.CharField(verbose_name='Платеж', choices=FEE, default='CARD', max_length=4)
     service = models.BooleanField(verbose_name='Доставка', default=True)
     address = models.CharField(verbose_name='Адрес', max_length=80)
@@ -101,7 +87,6 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказчик'
         verbose_name_plural = 'Заказчики'
-        # unique_together = ['customer']
 
 
 class ItemOrders(models.Model):
@@ -116,3 +101,17 @@ class ItemOrders(models.Model):
     class Meta:
         verbose_name_plural = 'Заказы'
         verbose_name = 'Заказ'
+
+
+class Comment(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    text = models.TextField(verbose_name='Текст')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Владелец')
+    is_published = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+
+    def __str__(self):
+        return f'{self.product}'
+
+    class Meta:
+        verbose_name_plural = 'Комментарии'
+        verbose_name = 'Комментарий'

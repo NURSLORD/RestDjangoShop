@@ -15,9 +15,8 @@ class CategoryAdmin(admin.ModelAdmin):
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = ['title', 'category']
     list_display_links = list_display
-    list_per_page = 5
+    list_per_page = 20
     search_fields = list_display
-    filter = 'is_active'
 
 
 class ItemOrderAdmin(admin.TabularInline):
@@ -51,11 +50,19 @@ class ProductAdmin(admin.ModelAdmin):
     def set_rub(self, request, qs: QuerySet):
         qs.update(cur=Product.RUB)
 
-    @admin.action(description='add 1 to amount')
+    @admin.action(description='Добавить 1 на количество')
     def add_one(self, request, qs: QuerySet):
         for i in qs:
             i.amount += 1
             i.save()
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['product', 'owner', 'is_published']
+    list_display_links = ['product', 'owner']
+    save_on_top = True
+    list_per_page = 20
 
 
 admin.site.register(Order, OrderAdmin)

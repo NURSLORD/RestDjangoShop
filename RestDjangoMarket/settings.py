@@ -37,14 +37,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my apps
     'shop.apps.ShopConfig',
+    'account.apps.AccountConfig',
     # smart_selects
     'smart_selects',
     # for django rest
     'rest_framework',
+    'rest_framework.authtoken',
     # For swagger
     'drf_yasg',
+    # django filter
+    'django_filters',
 
 ]
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = 'thnurs27@mail.ru'
+EMAIL_HOST_PASSWORD = 'c0iWajhMi0P7abCuZFVu'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 USE_DJANGO_JQUERY = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,6 +97,21 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+    ],
+    # for backend filter
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -125,3 +150,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'account.User'

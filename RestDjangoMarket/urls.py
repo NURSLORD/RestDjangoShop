@@ -17,12 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from RestDjangoMarket.swagger import swagger_urlpatterns
-from shop.views import CategoryAPIView
+from account.views import LoginWithEmailView, SendSmsToEmailView
 
 BASE_URL = 'api/v1/'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(BASE_URL + 'shop/', include('shop.urls')),
+    path(BASE_URL, include('rest_framework.urls')),
+    path(BASE_URL + 'token/', LoginWithEmailView.as_view()),
+    path(BASE_URL + 'get_code/', SendSmsToEmailView.as_view()),
 ]
 # for swagger
 urlpatterns += swagger_urlpatterns
